@@ -179,8 +179,8 @@ export async function createCard(deckId, card, signal) {
  * @returns {Promise<Error|*>}
  *  a promise that resolves to the saved card.
  */
-export async function readCard(cardId, signal) {
-  const url = `${API_BASE_URL}/cards/${cardId}`;
+export async function readCard(deckId, signal) {
+  const url = `${API_BASE_URL}/cards/${deckId}`;
   return await fetchJson(url, { signal }, {});
 }
 
