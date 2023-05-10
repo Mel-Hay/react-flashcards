@@ -1,7 +1,6 @@
 import {
   NavLink,
   useParams,
-  useHistory,
 } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { readDeck, createCard } from "../utils/api";
@@ -12,7 +11,7 @@ function AddCard() {
   const [deck, setDeck] = useState({});
   const [front, setFront] = useState("");
   const [back, setBack] = useState("");
-  const history = useHistory();
+
 
   function fetchDecks() {
     readDeck(deckId).then((data) => setDeck(data));
