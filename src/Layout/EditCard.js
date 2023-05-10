@@ -1,6 +1,7 @@
 import { NavLink, useParams, useHistory } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { readCard, readDeck, updateCard } from "../utils/api";
+import FormComponent from "./FormComponent";
 
 function EditCard() {
   const { cardId, deckId } = useParams();
@@ -28,24 +29,9 @@ function EditCard() {
     fetchDeck();
   }, [deckId]);
 
-
-  const handleFront = (event) => {
-    setFront(event.target.value);
-    setCard({
-      ...card,
-      front: event.target.value,
-    });
-  };
-  const handleBack = (event) => {
-    setBack(event.target.value);
-    setCard({
-      ...card,
-      back: event.target.value,
-    });
-  };
-
-  const handleEdit = async () => {
-    const newCard = await updateCard(card);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const newCard = await updateCard({ ...card, front, back });
     setCard(newCard);
     history.push(`/decks/${deckId}`);
   };
@@ -66,39 +52,13 @@ function EditCard() {
         <li className="breadcrumb-item">Edit Card {cardId}</li>
       </ul>
       <h3>Edit Card</h3>
-      <div>
-        <p className="my-0">Front</p>
-        <textarea
-          onChange={handleFront}
-          value={front}
-          className="w-100"
-        ></textarea>
-      </div>
-
-      <div className="py-2 my-0">
-        <p className="my-0">Back</p>
-        <textarea
-          onChange={handleBack}
-          value={back}
-          className="w-100"
-        ></textarea>
-      </div>
-      <div className="py-2 ">
-        <button className="bg-secondary mx-1 rounded">
-          <NavLink
-            className="text-decoration-none text-light"
-            to={`/decks/${deckId}`}
-          >
-            Cancel
-          </NavLink>
-        </button>
-        <button
-          className="bg-primary text-light mx-1 rounded"
-          onClick={handleEdit}
-        >
-          Submit
-        </button>
-      </div>
+      <FormComponent
+        front={front}
+        setFront={setFront}
+        back={back}
+        setBack={setBack}
+        handleSubmit={handleSubmit}
+      />
     </>
   );
 }

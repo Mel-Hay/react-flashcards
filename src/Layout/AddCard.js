@@ -5,16 +5,13 @@ import {
 } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { readDeck, createCard } from "../utils/api";
+import FormComponent from "./FormComponent";
 
 function AddCard() {
   const { deckId } = useParams();
-  const [front, setFront] = useState();
-  const [back, setBack] = useState();
   const [deck, setDeck] = useState({});
-  const [card, setCard] = useState({
-    front: front,
-    back: back,
-  });
+  const [front, setFront] = useState("");
+  const [back, setBack] = useState("");
   const history = useHistory();
 
   function fetchDecks() {
@@ -22,31 +19,14 @@ function AddCard() {
   }
   useEffect(fetchDecks, [deckId]);
 
-  const handleFront = (event) => {
-    setFront(event.target.value);
-    
-    setCard({
-        ...card,
-      front: event.target.value
-    });
-  };
-  const handleBack = (event) => {
-    setBack(event.target.value);
-   
-    setCard({
-      ...card,
-      back: event.target.value,
-    });
-  };
-  const handleDone = () => history.push(`/decks/${deckId}`);
-
-  const handleSave = async () => {
-    
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const card = { front, back };
     await createCard(deckId, card);
-      
-      setFront("")
-      setBack("")
+    setFront("");
+    setBack("");
   };
+
 
   return (
     <>
@@ -64,38 +44,14 @@ function AddCard() {
         <li className="breadcrumb-item">Add Card</li>
       </ul>
       <h3>{deck.name}: Add Card</h3>
-      <div>
-        <p>Front</p>
-        <textarea 
-        placeholder="Front side of card"
-        className="w-100"
-        value={front}
-        onChange={handleFront} >
-        </textarea>
-      </div>
 
-      <div>
-        <p>Back</p>
-        <textarea 
-        placeholder="Back side of card"
-        className="w-100"
-        value={back}
-        onChange={handleBack}>
-        </textarea>
-      </div>
-
-      <div className="p-2">
-        <button 
-        className="bg-secondary text-light rounded mx-2"
-        onClick={handleDone} >
-          Done
-        </button>
-        <button 
-       className="bg-primary text-light rounded mx-2"
-        onClick={handleSave} >
-          Save
-        </button>
-      </div>
+      <FormComponent
+        front={front}
+        setFront={setFront}
+        back={back}
+        setBack={setBack}
+        handleSubmit={handleSubmit}
+      />
     </>
   );
 }
